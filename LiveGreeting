@@ -1,0 +1,37 @@
+import { useState } from "react";
+
+export default function App() {
+  const [name, setName] = useState("");
+
+  // Inline style objects
+  const appStyle = {
+    fontFamily: "sans-serif",
+    textAlign: "center",
+    backgroundColor: "aqua",
+    padding: "20px",
+    borderRadius: "20px",
+  };
+
+  const spanStyle = {
+    color: "brown",
+  };
+
+  return (
+    <div style={appStyle}>
+      <h1>Live Greeting</h1>
+
+      <input
+        type="text"
+        placeholder="Enter your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      <h2>
+        Hello, {name || <span style={spanStyle}>Stranger</span>}!
+      </h2>
+
+      <button onClick={() => setName("")}>Reset</button>
+    </div>
+  );
+}
