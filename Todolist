@@ -1,0 +1,26 @@
+<ul>
+  {todos.map((item, index) => (
+    <li key={index}>
+      {item.isEditing ? (
+        <>
+          <input
+            type="text"
+            defaultValue={item.text}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                saveEdit(index, e.target.value);
+              }
+            }}
+          />
+          <button onClick={() => saveEdit(index, item.text)}>Save</button>
+        </>
+      ) : (
+        <>
+          {item.text}{" "}
+          <button onClick={() => toggleEdit(index)}>✏️</button>
+          <button onClick={() => deleteTask(index)}>❌</button>
+        </>
+      )}
+    </li>
+  ))}
+</ul>
