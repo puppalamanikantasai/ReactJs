@@ -1,26 +1,60 @@
-<ul>
-  {todos.map((item, index) => (
-    <li key={index}>
-      {item.isEditing ? (
-        <>
-          <input
-            type="text"
-            defaultValue={item.text}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                saveEdit(index, e.target.value);
-              }
-            }}
-          />
-          <button onClick={() => saveEdit(index, item.text)}>Save</button>
-        </>
-      ) : (
-        <>
-          {item.text}{" "}
-          <button onClick={() => toggleEdit(index)}>✏️</button>
-          <button onClick={() => deleteTask(index)}>❌</button>
-        </>
-      )}
-    </li>
-  ))}
-</ul>
+import { useState, useEffect } from "react";
+import "./styles.css";
+
+export default function App() {
+  const [task, setTask] = useState("");
+  const [todos, setTodos] = useState([]);
+
+  // Load tasks from localStorage when the app loads
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos");
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos));  // Parse to convert string back to array
+    }
+  }, []);
+
+  // Save tasks to localStorage whenever the todos change
+  useEffect(() => {
+    if (todos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(todos)); // Save tasks as string
+    }
+  }, [todos]);
+
+  const addTask = (e) => {
+    e.preventDefault();
+    if (task.trim() === "") return;
+    const newTodos = [...todos, task];
+    setTodos(newTodos);
+    setTask("");  // Clear input after adding task
+  };
+
+  const deleteTask = (index) => {
+    const newTodos = todos.filter((_, i) => i !== index); // Remove task by index
+    setTodos(newTodos);
+  };
+
+  return (
+    <div className="App">
+      <h1>To-Do List 📝</h1>
+
+      <form onSubmit={addTask}>
+        <input
+          type="text"
+          placeholder="Enter a task"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+        />
+        <button type="submit">Add</button>
+      </form>
+
+      <ul>
+        {todos.map((item, index) => (
+          <li key={index}>
+            {item}{" "}
+            <button onClick={() => deleteTask(index)}>❌</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
